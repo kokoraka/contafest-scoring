@@ -1,13 +1,30 @@
 new Vue({
   el: '#app',
   data: {
+    database: {
+      contafest: {
+        object: null,
+        setting: {
+          name: 'contafest',
+          version: 1
+        }
+      },
+    },
     teams: [],
     battles: []
   },
-  mounted: function() {  
+  mounted: function() { 
+    // var database = this.openDatabase();
     this.setDummyTeams();
+    this.setDummyBattles();
   },
   methods: {
+    openDatabase: function() {
+      return idb.open(
+        this.database.contafest.setting.name, 
+        this.database.contafest.setting.version
+      );
+    },
     getRandomNumber: function(max) {
       return Math.floor(Math.random() * max);
     },
@@ -68,6 +85,18 @@ new Vue({
         {
           name: 'Gantian',
           teams: [1, 3]
+        },
+        {
+          name: 'Rebutan',
+          teams: [2, 3]
+        },
+        {
+          name: 'Babak Belur',
+          teams: [3, 4]
+        },
+        {
+          name: 'Taruhan',
+          teams: [2, 4]
         },
       ];
       

@@ -167,7 +167,31 @@
   <script src="assets/jquery/jquery.min.js" type="text/javascript"></script>
   <script src="assets/vuejs/vue.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-  <script src="assets/chartjs/chart.min.js" type="text/javascript"></script>  
+  <!-- <script src="assets/chartjs/chart.min.js" type="text/javascript"></script>   -->
+  <script type="module">
+    import { openDB, deleteDB } from 'https://unpkg.com/idb?module'
+  </script>
   <script src="index.js" type="text/javascript"></script>
+  <script type="text/javascript">
+    (function() {
+      'use strict';      
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('worker.js')
+          .then(registration => {
+            console.log('Service Worker is registered', registration);
+          })
+          .catch(err => {
+            console.error('Registration failed:', err);
+          });
+        });
+      }
+      if (!('indexedDB' in window)) {
+        alert('Aplikasi tidak didukung browser, gunakan browser lain');
+        console.log('This browser doesn\'t support IndexedDB');
+        // return;
+      }
+    })();
+  </script>
 </body>
 </html>
