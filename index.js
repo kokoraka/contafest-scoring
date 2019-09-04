@@ -1,12 +1,41 @@
 new Vue({
   el: '#app',
   data: {
+    connection: {},
     database: {
       contafest: {
-        object: null,
+        instance: {},
+        status: false,
         setting: {
           name: 'contafest',
-          version: 1
+          version: 1,
+          tables: [
+            {
+              name: 'teams',
+              columns: {
+                id: { primaryKey: true, autoIncrement: true },
+                name: { notNull: true, dataType: "string" },
+                type: { notNull: true, dataType: "string" },
+                total_scores : { notNull: true, dataType: "number" },
+                members: { dataType: 'array' },
+                created_at: { notNull: true, dataType: 'date_time' },
+                updated_at: { notNull: true, dataType: 'date_time' },
+              }
+            },
+            {
+              name: 'battles',
+              columns: {
+                id: { primaryKey: true, autoIncrement: true },
+                name: { notNull: true, dataType: "string" },
+                type: { notNull: true, dataType: "string" },
+                total_scores : { notNull: true, dataType: "number" },
+                teams: { dataType: 'array' },
+                histories: { dataType: 'array' },
+                created_at: { notNull: true, dataType: 'date_time' },
+                updated_at: { notNull: true, dataType: 'date_time' },
+              }
+            }
+          ]
         }
       },
     },
@@ -14,27 +43,38 @@ new Vue({
     battles: []
   },
   mounted: function() { 
-    // var database = this.openDatabase();
-    this.setDummyTeams();
-    this.setDummyBattles();
+    this.openConnection();
+    this.setDatabaseContafest();
+
+    this.setDummyData();
   },
   methods: {
-    openDatabase: function() {
-      return idb.open(
-        this.database.contafest.setting.name, 
-        this.database.contafest.setting.version
-      );
+    openConnection: function() {
+      this.connection = new JsStore.Instance();
+    },
+    setDatabaseContafest: async function() {
+      this.database.contafest.status = await this.connection.initDb({
+        name: this.database.contafest.setting.name,
+        tables: this.database.contafest.setting.tables
+      });
     },
     getRandomNumber: function(max) {
       return Math.floor(Math.random() * max);
     },
+    setDummyData: function() {
+      this.setDummyTeams();
+      this.multiplyDummyTeams(3);
+
+      this.setDummyBattles();
+      this.multiplyDummyBattles(3);
+    },
     setDummyTeams: function() {
-      var defaultTeams = [
+      this.teams = [
         {
           id: 1,
           name: 'Pejuang45',
           type: 'A',
-          score: this.getRandomNumber(10000),
+          total_scores: this.getRandomNumber(10000),
           members: [
             {name: 'Raka SW'},
             {name: 'Lucky CW'},
@@ -45,7 +85,7 @@ new Vue({
           id: 2,
           name: 'KidsZamanNow',
           type: 'A',
-          score: this.getRandomNumber(10000),
+          total_scores: this.getRandomNumber(10000),
           members: [
             {name: 'Marchiella W'},
             {name: 'Wibisana T'},
@@ -56,7 +96,7 @@ new Vue({
           id: 3,
           name: '3musketeer',
           type: 'B',
-          score: this.getRandomNumber(10000),
+          total_scores: this.getRandomNumber(10000),
           members: [
             {name: 'Sianita D'},
             {name: 'Vania E'},
@@ -66,47 +106,67 @@ new Vue({
           id: 4,
           name: 'SingleTim',
           type: 'B',
-          score: this.getRandomNumber(10000),
+          total_scores: this.getRandomNumber(10000),
           members: [
             {name: 'Evelyn J'},
           ]
         }
       ];
-      
-      for (var i = 1; i <= 3; i++) {
-        var curr = this;
-        defaultTeams.forEach(function(team) {
-          curr.teams.push(team);
-        });
+    },
+    multiplyDummyTeams: function(amount = 1) {
+      var teams = [];
+      for (let i = 1; i <= amount; i++) {
+        for (const team of this.teams) {
+          teams.push(team);
+        }
       }
+      this.teams = teams;
     },
     setDummyBattles: function() {
-      var defaultBattles = [
+      this.battles = [
         {
+          id: 1,
           name: 'Gantian',
-          teams: [1, 3]
+          type: 'A',
+          teams: [1, 3],
+          total_scores: this.getRandomNumber(10000),
+          histories: []
         },
         {
+          id: 2,
           name: 'Rebutan',
-          teams: [2, 3]
+          type: 'B',
+          teams: [2, 3],
+          total_scores: this.getRandomNumber(10000),
+          histories: []
         },
         {
+          id: 3,
           name: 'Babak Belur',
-          teams: [3, 4]
+          type: 'A',
+          teams: [3, 4],
+          total_scores: this.getRandomNumber(10000),
+          histories: []
         },
         {
+          id: 4,
           name: 'Taruhan',
-          teams: [2, 4]
+          type: 'B',
+          teams: [2, 4],
+          total_scores: this.getRandomNumber(10000),
+          histories: []
         },
       ];
-      
-      for (var i = 1; i <= 3; i++) {
-        var curr = this;
-        defaultBattles.forEach(function(battle) {
-          curr.battles.push(battle);
-        });
+    },
+    multiplyDummyBattles: function(amount = 1) {
+      var battles = [];
+      for (let i = 1; i <= amount; i++) {
+        for (const team of this.battles) {
+          battles.push(team);
+        }
       }
-    }
+      this.battles = battles;
+    },
   },
   watch: {
     // teams: function(newVal, oldVal) {

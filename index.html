@@ -23,33 +23,45 @@
         <div class="col-lg-8">
           <div class="row">
             <div class="col-2">
-              <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" 
-                  href="#v-pills-home" role="tab" 
-                  aria-controls="v-pills-home" aria-selected="true">
-                  #1
-                </a>
-                <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" 
-                  href="#v-pills-profile" role="tab" 
-                  aria-controls="v-pills-profile" aria-selected="false">
-                  #2
-                </a>
-                <a class="nav-link" id="v-pills-new-tab" data-toggle="pill" 
-                  href="#v-pills-new" role="tab" 
-                  aria-controls="v-pills-new" aria-selected="false">
+              <div class="nav flex-column nav-pills" id="v-pills-tab" 
+                role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-new-tab" data-toggle="pill" 
+                  href="#v-pills-new" role="tab" aria-controls="v-pills-new" 
+                  aria-selected="false">
                   Baru
+                </a>
+                <a class="nav-link" v-for="(battle, index) in battles"
+                  v-bind:id="'v-pills-battle-' + battle.id + '-tab'" data-toggle="pill" 
+                  v-bind:href="'#v-pills-battle-' + battle.id" role="tab" 
+                  v-bind:aria-controls="'v-pills-battle-' + battle.id" 
+                  aria-selected="true">
+                  #{{ (index+1) }}
                 </a>
               </div>
             </div>
             <div class="col-10">
-              <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+              <div class="tab-content">
+                <div class="tab-pane fade show active" id="v-pills-new" 
+                  role="tabpanel" aria-labelledby="v-pills-new-tab">
                   <div class="card">
                     <div class="card-body">
-                      <h3>Pertandingan 1</h3>
+                      <h3>Pertandingan Baru</h3>
+                      <hr>
+                      <div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade" v-for="(battle, index) in battles"
+                  v-bind:id="'v-pills-battle-' + battle.id" 
+                  role="tabpanel" v-bind:aria-labelledby="'v-pills-battle-' + battle.id + '-tab'">
+                  <div class="card">
+                    <div class="card-body">
+                      <h3>Pertandingan {{ (index+1) }} ({{ battle.name }})</h3>
                       <hr>
                       <div class="row">
-                        <div class="col-lg-4" v-for="(battle, index) in [1, 2, 3]">
+                        <div class="col-lg-4" v-for="(team, index) in [1, 2, 3]">
                           <div class="card">
                             <div class="card-body">
                               <h4 class="text-primary">Nama Tim</h4>
@@ -72,28 +84,6 @@
                     </div>
                   </div>
                 </div>
-                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
-                  <div class="card">
-                    <div class="card-body">
-                      <h3>Pertandingan 2</h3>
-                      <hr>
-                      <div>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium consectetur amet ducimus neque illo, dolores iure perspiciatis reprehenderit minima id eveniet, eaque officia? Excepturi fuga tenetur voluptatibus sequi animi nostrum.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="tab-pane fade" id="v-pills-new" role="tabpanel" aria-labelledby="v-pills-new-tab">
-                  <div class="card">
-                    <div class="card-body">
-                      <h3>Pertandingan Baru</h3>
-                      <hr>
-                      <div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -111,7 +101,7 @@
                   v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teams">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
-                    <strong>{{ team.score }}</strong>
+                    <strong>{{ team.total_scores }}</strong>
                   </div>
                 </div>
               </div>
@@ -128,7 +118,7 @@
                   v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teams">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
-                    <strong>{{ team.score }}</strong>
+                    <strong>{{ team.total_scores }}</strong>
                   </div>
                 </div>
               </div>
@@ -167,12 +157,12 @@
   <script src="assets/jquery/jquery.min.js" type="text/javascript"></script>
   <script src="assets/vuejs/vue.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="assets/jsstore/dist/jsstore.min.js"></script>
+  <script src="assets/jsstore/dist/jsstore.worker.min.js"></script>
   <!-- <script src="assets/chartjs/chart.min.js" type="text/javascript"></script>   -->
-  <script type="module">
-    import { openDB, deleteDB } from 'https://unpkg.com/idb?module'
-  </script>
+
   <script src="index.js" type="text/javascript"></script>
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     (function() {
       'use strict';      
       if ('serviceWorker' in navigator) {
@@ -192,6 +182,6 @@
         // return;
       }
     })();
-  </script>
+  </script> -->
 </body>
 </html>
