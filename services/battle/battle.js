@@ -6,27 +6,56 @@ export class BattleService {
 		this.tableName = "battle";
 	}
 
-	store(battle) {
-		if (!battle.total_scores) {
-			battle.total_scores = 0;
-		}
-		for (var i = 0; i < battle.teams.length; i++) {
-			let id = battle.teams[i];
-			battle.teams[i] = {
-				team_id: id,
-				total_scores: 0
-			};
-		}
-		return connection.insert({
-			into: this.tableName,
-			values: [battle],
-			return: true
-		})
+	async store(battle) {
+		var result = await connection.transaction({
+			tables: ['battle', 'battle_team'],
+			logic: async function(ctx) {
+				start();
+				setResult('battle', {});
+				const insertedBattle = await ctx.insert({
+					into: this.tableName,
+					values: [ ctx.data.battle ],
+					return: true
+				});
+				const battle = insertedBattle[0];
+				const battleTeam = ctx.data.teams.map((team) => {
+					return {
+						total_scores: 0,
+						team_id: team,
+						battle_id: battle.id,						
+					};
+				});
+				const insertedBattleTeam = await ctx.insert({
+					into: 'battle_team',
+					values: battleTeam,
+					return: true
+				})
+				setResult('battle', {'battle': battle, 'battle_team': insertedBattleTeam});
+			},
+			data: {
+				battle: {
+					name: battle.name,
+					type: battle.type,
+					total_scores: 0,
+				},
+				teams: battle.teams
+			}
+		});
+		return result.battle;
 	}
 
   all() {
 		return connection.select({
 			from: this.tableName,
+			// join: [
+			// 	{
+			// 		with: "team",
+			// 		on: "team.id=battle.teams.",
+			// 		as: {
+			// 				customerId: table2_customerId
+			// 		} 
+			// 	}
+			// ]
 		})
   }
   

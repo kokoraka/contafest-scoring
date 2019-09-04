@@ -109,7 +109,17 @@ new Vue({
                 name: { notNull: true, dataType: "string" },
                 type: { notNull: true, dataType: "string" },
                 total_scores : { notNull: true, dataType: "number", default: 0 },
-                teams: { notNull: true, dataType: 'array' },//{team_id, total_scores}
+                created_at: { notNull: true, dataType: 'date_time', default: new Date() },
+                updated_at: { notNull: true, dataType: 'date_time', default: new Date() },
+              }
+            },
+            {
+              name: 'battle_team',
+              columns: {
+                id: { primaryKey: true, autoIncrement: true, dataType: "number" },
+                total_scores : { notNull: true, dataType: "number", default: 0 },
+                team_id: { notNull: true, dataType: "number" },
+                battle_id: { notNull: true, dataType: "number" },
                 created_at: { notNull: true, dataType: 'date_time', default: new Date() },
                 updated_at: { notNull: true, dataType: 'date_time', default: new Date() },
               }
