@@ -96,9 +96,9 @@
           <div class="row">
             <div class="col-6">
               <h5 class="text-center">Kategori A</h5>
-              <div class="list-group mt-1" v-if="teams.length > 0">
+              <div class="list-group mt-1" v-if="teamsA.length > 0">
                 <div class="list-group-item list-group-item-action text-white mb-1" 
-                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teams">
+                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teamsA">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
                     <strong>{{ team.total_scores }}</strong>
@@ -113,9 +113,9 @@
             </div>
             <div class="col-6">
               <h5 class="text-center">Kategori B</h5>
-              <div class="list-group mt-1" v-if="teams.length > 0">
+              <div class="list-group mt-1" v-if="teamsB.length > 0">
                 <div class="list-group-item list-group-item-action text-white mb-1" 
-                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teams">
+                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" v-for="(team, index) in teamsB">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
                     <strong>{{ team.total_scores }}</strong>

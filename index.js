@@ -45,14 +45,21 @@ new Vue({
       type: '',
     },
     teams: [],
+    teamsA: [],
+    teamsB: [],
     battles: []
   },
   mounted: function() { 
     this.openConnection();
     this.setDatabaseContafest();
+
+    this.refreshTeam();
     this.setDummyData();
   },
   methods: {
+    getRandomNumber: function(max) {
+      return Math.floor(Math.random() * max);
+    },
     openConnection: function() {
       this.connection = connection;
     },
@@ -61,71 +68,68 @@ new Vue({
         name: this.database.contafest.setting.name,
         tables: this.database.contafest.setting.tables
       });
-    },
-    getRandomNumber: function(max) {
-      return Math.floor(Math.random() * max);
-    },
+    },    
     setDummyData: function() {
-      this.setDummyTeams();
-      this.multiplyDummyTeams(3);
+      // this.setDummyTeams();
+      // this.multiplyDummyTeams(3);
 
       this.setDummyBattles();
       this.multiplyDummyBattles(3);
     },
-    setDummyTeams: function() {
-      this.teams = [
-        {
-          id: 1,
-          name: 'Pejuang45',
-          type: 'A',
-          total_scores: this.getRandomNumber(10000),
-          members: [
-            {name: 'Raka SW'},
-            {name: 'Lucky CW'},
-            {name: 'Yoga W'},
-          ]
-        },
-        {
-          id: 2,
-          name: 'KidsZamanNow',
-          type: 'A',
-          total_scores: this.getRandomNumber(10000),
-          members: [
-            {name: 'Marchiella W'},
-            {name: 'Wibisana T'},
-            {name: 'Hokianto S'},
-          ]
-        },
-        {
-          id: 3,
-          name: '3musketeer',
-          type: 'B',
-          total_scores: this.getRandomNumber(10000),
-          members: [
-            {name: 'Sianita D'},
-            {name: 'Vania E'},
-          ]
-        },
-        {
-          id: 4,
-          name: 'SingleTim',
-          type: 'B',
-          total_scores: this.getRandomNumber(10000),
-          members: [
-            {name: 'Evelyn J'},
-          ]
-        }
-      ];
-    },
-    multiplyDummyTeams: function(amount = 1) {
-      var teams = [];
-      for (let i = 1; i <= amount; i++) {
-        for (const team of this.teams) {
-          teams.push(team);
-        }
-      }
-      this.teams = teams;
-    },
+    // setDummyTeams: function() {
+    //   this.teams = [
+    //     {
+    //       id: 1,
+    //       name: 'Pejuang45',
+    //       type: 'A',
+    //       total_scores: this.getRandomNumber(10000),
+    //       members: [
+    //         {name: 'Raka SW'},
+    //         {name: 'Lucky CW'},
+    //         {name: 'Yoga W'},
+    //       ]
+    //     },
+    //     {
+    //       id: 2,
+    //       name: 'KidsZamanNow',
+    //       type: 'A',
+    //       total_scores: this.getRandomNumber(10000),
+    //       members: [
+    //         {name: 'Marchiella W'},
+    //         {name: 'Wibisana T'},
+    //         {name: 'Hokianto S'},
+    //       ]
+    //     },
+    //     {
+    //       id: 3,
+    //       name: '3musketeer',
+    //       type: 'B',
+    //       total_scores: this.getRandomNumber(10000),
+    //       members: [
+    //         {name: 'Sianita D'},
+    //         {name: 'Vania E'},
+    //       ]
+    //     },
+    //     {
+    //       id: 4,
+    //       name: 'SingleTim',
+    //       type: 'B',
+    //       total_scores: this.getRandomNumber(10000),
+    //       members: [
+    //         {name: 'Evelyn J'},
+    //       ]
+    //     }
+    //   ];
+    // },
+    // multiplyDummyTeams: function(amount = 1) {
+    //   var teams = [];
+    //   for (let i = 1; i <= amount; i++) {
+    //     for (const team of this.teams) {
+    //       teams.push(team);
+    //     }
+    //   }
+    //   this.teams = teams;
+    // },
     setDummyBattles: function() {
       this.battles = [
         {
@@ -171,10 +175,68 @@ new Vue({
       }
       this.battles = battles;
     },
+    refreshTeam: function() {
+      this.fetchTeam();
+      this.fetchTeamA();
+      this.fetchTeamB();
+    },
+    fetchTeam: async function() {
+      this.teams = [];
+      try {
+        const results = await new TeamService().filter(
+          null,
+          [
+            { by: 'total_scores', type: 'desc' },
+            { by: 'name', type: 'asc' }
+          ]
+        );
+        this.teams = results;
+      } catch (e) {
+        console.log(e);       
+      }
+    },
+    fetchTeamA: async function() {
+      this.teamsA = [];
+      try {
+        const results = await new TeamService().filter(
+          { type: 'A' },
+          [
+            { by: 'total_scores', type: 'desc' },
+            { by: 'name', type: 'asc' }
+          ]
+        );
+        this.teamsA = results;
+      } catch (e) {
+        console.log(e);       
+      }
+    },
+    fetchTeamB: async function() {
+      this.teamsB = [];
+      try {
+        const results = await new TeamService().filter(
+          { type: 'B' },
+          [
+            { by: 'total_scores', type: 'desc' },
+            { by: 'name', type: 'asc' }
+          ]
+        );
+        this.teamsB = results;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    resetNewTeam: function() {
+      this.newTeam = {
+        name: '',
+        type: '',
+      };
+    },
     fireAddTeam: async function() {
       try {
         const results = await new TeamService().store(this.newTeam);
         if (results && results.length > 0) {
+          this.refreshTeam();
+          this.resetNewTeam();
           results.forEach(team => {
             alert('Berhasil menambahkan tim ' + team.name);
           });

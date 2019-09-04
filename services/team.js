@@ -6,12 +6,6 @@ export class TeamService {
 		this.tableName = "teams";
 	}
 
-	all() {
-		return connection.select({
-			from: this.tableName,
-		})
-	}
-
 	store(team) {
     team = {
       name: team.name,
@@ -27,6 +21,12 @@ export class TeamService {
 		})
 	}
 
+  all() {
+		return connection.select({
+			from: this.tableName,
+		})
+  }
+  
 	retrieve(id) {
 		return connection.select({
 			from: this.tableName,
@@ -34,6 +34,17 @@ export class TeamService {
 				id: id
 			}
 		})
+	}
+
+  filter(where = null, order = null) {
+    var data = { from: this.tableName };
+    if (where !== null) {
+      data.where = where;
+    }
+    if (order !== null) {
+      data.order = order;
+    }
+		return connection.select(data);
 	}
 
 	destroy(id) {
