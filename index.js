@@ -1,11 +1,12 @@
+import { connection } from "./services/connection.js";
+import { TeamService } from "./services/team.js";
+
 new Vue({
   el: '#app',
   data: {
     connection: {},
     database: {
       contafest: {
-        instance: {},
-        status: false,
         setting: {
           name: 'contafest',
           version: 1,
@@ -39,21 +40,24 @@ new Vue({
         }
       },
     },
+    newTeam: {
+      name: '',
+      type: '',
+    },
     teams: [],
     battles: []
   },
   mounted: function() { 
     this.openConnection();
     this.setDatabaseContafest();
-
     this.setDummyData();
   },
   methods: {
     openConnection: function() {
-      this.connection = new JsStore.Instance();
+      this.connection = connection;
     },
     setDatabaseContafest: async function() {
-      this.database.contafest.status = await this.connection.initDb({
+      return await this.connection.initDb({
         name: this.database.contafest.setting.name,
         tables: this.database.contafest.setting.tables
       });
@@ -167,6 +171,24 @@ new Vue({
       }
       this.battles = battles;
     },
+    fireAddTeam: async function() {
+      try {
+        const results = await new TeamService().store(this.newTeam);
+        if (results && results.length > 0) {
+          results.forEach(team => {
+            alert('Berhasil menambahkan tim ' + team.name);
+          });
+        }
+        else {
+          alert('Gagal menambahkan tim');
+        }
+      } catch (e) {
+        console.log(e);
+        if (e && e.message) {
+          alert(e.message);
+        }        
+      }
+    }
   },
   watch: {
     // teams: function(newVal, oldVal) {

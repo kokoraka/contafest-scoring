@@ -143,11 +143,40 @@
             </button>
           </div>
           <div class="modal-body">
-            Form Tim Baru
+            <form>
+              <div class="form-group">
+                <label for="name">Nama Tim</label>
+                <input type="text" class="form-control" id="name" 
+                  name="name" aria-describedby="nameHelp" 
+                  placeholder="Nama Tim" v-model="newTeam.name">
+                <small id="nameHelp" class="form-text text-muted">
+                  Nama yang berfaedah
+                </small>
+              </div>
+              <div class="form-group">
+                <label for="type">Kategori Tim</label>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" 
+                    name="type" id="categoryTypeA" value="A" 
+                    v-model="newTeam.type" checked>
+                  <label class="form-check-label" for="categoryTypeA">
+                    Kategori A
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" 
+                    name="type" id="categoryTypeB" value="B"
+                    v-model="newTeam.type">
+                  <label class="form-check-label" for="categoryTypeB">
+                    Kategori B
+                  </label>
+                </div>
+              </div>
+            </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
-            <button type="button" class="btn btn-primary">Simpan</button>
+            <button type="button" class="btn btn-primary" @click="fireAddTeam">Simpan</button>
           </div>
         </div>
       </div>
@@ -157,11 +186,16 @@
   <script src="assets/jquery/jquery.min.js" type="text/javascript"></script>
   <script src="assets/vuejs/vue.js"></script>
   <script src="assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+  <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
   <script src="assets/jsstore/dist/jsstore.min.js"></script>
   <script src="assets/jsstore/dist/jsstore.worker.min.js"></script>
   <!-- <script src="assets/chartjs/chart.min.js" type="text/javascript"></script>   -->
 
-  <script src="index.js" type="text/javascript"></script>
+  <script src="services/connection.js" type="module"></script>
+  <script src="services/team.js" type="module"></script>
+  <script src="index.js" type="module"></script>
   <!-- <script type="text/javascript">
     (function() {
       'use strict';      
