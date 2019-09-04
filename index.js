@@ -1,5 +1,83 @@
+window.$ = window.jQuery;
+
 import { connection } from "./services/connection.js";
 import { TeamService } from "./services/team.js";
+
+Vue.component('toast', {
+  template: `
+  <div class="toast" role="alert" aria-live="assertive" 
+    aria-atomic="true" data-autohide="false">
+    <div class="toast" role="alert" data-delay="5000"
+      style="position: absolute; top: 10px; right: 10px;">
+      <div class="toast-header bg-dark text-white">
+        <!-- <img src="" class="rounded mr-2" alt=""> -->
+        <strong class="mr-auto">{{ toast.title }}</strong>
+        <small class="text-white">{{ toast.description }}</small>
+        <button type="button" class="ml-2 mb-1 close" 
+          data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        {{ toast.content }}
+      </div>
+    </div>
+  </div>`,
+	data() {
+    return {
+      toast: {
+        title: 'Wei de dong Tian',
+        description: 'Confucius.ID',
+        content: 'Kunjungi terus Confucius.ID, ada pendidikan tiada perbedaan',        
+      }
+    }
+	},
+  props: [
+    'title', 'description', 'content'
+  ],
+  mounted: function() {
+    this.setProps();
+  },
+  methods: {
+    setProps() {
+      this.toast.title = this.title;
+      this.toast.description = this.description;
+      this.toast.content = this.content;
+    },
+    setTitle(title) {
+      this.toast.title = title;
+      return this;
+    },
+    setDescription(description) {
+      this.toast.description = description;
+      return this;
+    },
+    setContent(content) {
+      this.toast.content = content;
+      return this;
+    },
+    setData(data) {
+      if (data && data.title) {
+        this.setTitle(data.title);
+      }
+      if (data && data.description) {
+        this.setDescription(data.description);
+      }
+      if (data && data.content) {
+        this.setContent(data.content);
+      }
+      return this;
+    },
+    open() {
+      $('.toast').toast('show');
+    },
+    close() {
+      $('.toast').toast('hide');
+    }
+  },
+  watch: {},
+  computed: {}
+});
 
 new Vue({
   el: '#app',
@@ -49,10 +127,9 @@ new Vue({
     teamsB: [],
     battles: []
   },
-  mounted: function() { 
+  mounted: function() {
     this.openConnection();
-    this.setDatabaseContafest();
-
+    this.setDatabaseContafest();    
     this.refreshTeam();
     this.setDummyData();
   },
@@ -76,60 +153,6 @@ new Vue({
       this.setDummyBattles();
       this.multiplyDummyBattles(3);
     },
-    // setDummyTeams: function() {
-    //   this.teams = [
-    //     {
-    //       id: 1,
-    //       name: 'Pejuang45',
-    //       type: 'A',
-    //       total_scores: this.getRandomNumber(10000),
-    //       members: [
-    //         {name: 'Raka SW'},
-    //         {name: 'Lucky CW'},
-    //         {name: 'Yoga W'},
-    //       ]
-    //     },
-    //     {
-    //       id: 2,
-    //       name: 'KidsZamanNow',
-    //       type: 'A',
-    //       total_scores: this.getRandomNumber(10000),
-    //       members: [
-    //         {name: 'Marchiella W'},
-    //         {name: 'Wibisana T'},
-    //         {name: 'Hokianto S'},
-    //       ]
-    //     },
-    //     {
-    //       id: 3,
-    //       name: '3musketeer',
-    //       type: 'B',
-    //       total_scores: this.getRandomNumber(10000),
-    //       members: [
-    //         {name: 'Sianita D'},
-    //         {name: 'Vania E'},
-    //       ]
-    //     },
-    //     {
-    //       id: 4,
-    //       name: 'SingleTim',
-    //       type: 'B',
-    //       total_scores: this.getRandomNumber(10000),
-    //       members: [
-    //         {name: 'Evelyn J'},
-    //       ]
-    //     }
-    //   ];
-    // },
-    // multiplyDummyTeams: function(amount = 1) {
-    //   var teams = [];
-    //   for (let i = 1; i <= amount; i++) {
-    //     for (const team of this.teams) {
-    //       teams.push(team);
-    //     }
-    //   }
-    //   this.teams = teams;
-    // },
     setDummyBattles: function() {
       this.battles = [
         {
@@ -232,24 +255,41 @@ new Vue({
       };
     },
     fireAddTeam: async function() {
+      $('#modalAddTeam').modal('hide');
       try {
-        const results = await new TeamService().store(this.newTeam);
+        const results = await new TeamService().store(this.newTeam);        
         if (results && results.length > 0) {
           this.refreshTeam();
           this.resetNewTeam();
+          var curr = this;
           results.forEach(team => {
-            alert('Berhasil menambahkan tim ' + team.name);
+            curr.showToast({
+              title: 'Sukses',
+              description: 'Confucius.ID',
+              content: 'Berhasil menambahkan tim ' + team.name
+            });
           });
         }
         else {
-          alert('Gagal menambahkan tim');
+          this.showToast({
+            title: 'Gagal',
+            description: 'Confucius.ID',
+            content: 'Gagal menambahkan tim ' + team.name
+          });
         }
       } catch (e) {
         console.log(e);
         if (e && e.message) {
-          alert(e.message);
+          this.showToast({
+            title: 'Terjadi kesalahan',
+            description: 'Confucius.ID',
+            content: e.message
+          });
         }        
       }
+    },
+    showToast: function(data) {
+      this.$refs.toast.setData(data).open();
     }
   },
   watch: {

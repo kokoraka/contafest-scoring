@@ -10,7 +10,7 @@
   <title>Confucian Talent Festival - Scoring Board</title>
 </head>
 <body>
-  <div id="app">
+  <div id="app">    
     <div class="container-fluid">
       <div class="row">
         <div class="col-lg-12">
@@ -131,8 +131,9 @@
           </div>
         </div>
       </div>
-    </div>
-
+      <toast ref="toast" :title="'Wei de dong Tian'" :description="'Confucius.ID'" 
+        :content="'Kunjungi terus Confucius.ID, ada pendidikan tiada perbedaan'" />
+    </div>    
     <div class="modal fade" id="modalAddTeam" tabindex="-1" role="dialog" aria-labelledby="modalAddTeamLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -180,7 +181,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>    
   </div>
 
   <script src="assets/jquery/jquery.min.js" type="text/javascript"></script>
@@ -196,26 +197,26 @@
   <script src="services/connection.js" type="module"></script>
   <script src="services/team.js" type="module"></script>
   <script src="index.js" type="module"></script>
-  <!-- <script type="text/javascript">
-    (function() {
-      'use strict';      
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('worker.js')
-          .then(registration => {
-            console.log('Service Worker is registered', registration);
-          })
-          .catch(err => {
-            console.error('Registration failed:', err);
-          });
-        });
-      }
-      if (!('indexedDB' in window)) {
-        alert('Aplikasi tidak didukung browser, gunakan browser lain');
-        console.log('This browser doesn\'t support IndexedDB');
-        // return;
-      }
-    })();
-  </script> -->
+  <script type="text/javascript">
+    // (function() {
+    //   'use strict';      
+    //   if ('serviceWorker' in navigator) {
+    //     window.addEventListener('load', () => {
+    //       navigator.serviceWorker.register('worker.js')
+    //       .then(registration => {
+    //         console.log('Service Worker is registered', registration);
+    //       })
+    //       .catch(err => {
+    //         console.error('Registration failed:', err);
+    //       });
+    //     });
+    //   }
+    //   if (!('indexedDB' in window)) {
+    //     alert('Aplikasi tidak didukung browser, gunakan browser lain');
+    //     console.log('This browser doesn\'t support IndexedDB');
+    //     // return;
+    //   }
+    // })();
+  </script>
 </body>
 </html>
