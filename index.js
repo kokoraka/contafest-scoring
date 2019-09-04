@@ -1,14 +1,15 @@
 window.$ = window.jQuery;
 
 import { connection } from "./services/connection.js";
-import { TeamService } from "./services/team.js";
+import { TeamService } from "./services/team/team.js";
+import { BattleService } from "./services/battle/battle.js";
 
 Vue.component('toast', {
   template: `
   <div class="toast" role="alert" aria-live="assertive" 
     aria-atomic="true" data-autohide="false">
     <div class="toast" role="alert" data-delay="5000"
-      style="position: absolute; top: 10px; right: 10px;">
+      style="position: fixed; top: 10px; right: 10px;">
       <div class="toast-header bg-dark text-white">
         <!-- <img src="" class="rounded mr-2" alt=""> -->
         <strong class="mr-auto">{{ toast.title }}</strong>
@@ -90,28 +91,38 @@ new Vue({
           version: 1,
           tables: [
             {
-              name: 'teams',
+              name: 'team',
               columns: {
-                id: { primaryKey: true, autoIncrement: true },
+                id: { primaryKey: true, autoIncrement: true, dataType: "number" },
                 name: { notNull: true, dataType: "string" },
                 type: { notNull: true, dataType: "string" },
-                total_scores : { notNull: true, dataType: "number" },
-                members: { dataType: 'array' },
-                created_at: { notNull: true, dataType: 'date_time' },
-                updated_at: { notNull: true, dataType: 'date_time' },
+                total_scores : { notNull: true, dataType: "number", default: 0 },
+                // members: { notNull: true, dataType: 'array' },
+                created_at: { notNull: true, dataType: 'date_time', default: new Date() },
+                updated_at: { notNull: true, dataType: 'date_time', default: new Date() },
               }
             },
             {
-              name: 'battles',
+              name: 'battle',
               columns: {
-                id: { primaryKey: true, autoIncrement: true },
+                id: { primaryKey: true, autoIncrement: true, dataType: "number" },
                 name: { notNull: true, dataType: "string" },
                 type: { notNull: true, dataType: "string" },
-                total_scores : { notNull: true, dataType: "number" },
-                teams: { dataType: 'array' },
-                histories: { dataType: 'array' },
-                created_at: { notNull: true, dataType: 'date_time' },
-                updated_at: { notNull: true, dataType: 'date_time' },
+                total_scores : { notNull: true, dataType: "number", default: 0 },
+                teams: { notNull: true, dataType: 'array' },//{team_id, total_scores}
+                created_at: { notNull: true, dataType: 'date_time', default: new Date() },
+                updated_at: { notNull: true, dataType: 'date_time', default: new Date() },
+              }
+            },
+            {
+              name: 'battle_history',
+              columns: {
+                id: { primaryKey: true, autoIncrement: true, dataType: "number" },
+                score : { notNull: true, dataType: "number" },
+                team_id: { notNull: true, dataType: "number" },
+                battle_id: { notNull: true, dataType: "number" },
+                created_at: { notNull: true, dataType: 'date_time', default: new Date() },
+                updated_at: { notNull: true, dataType: 'date_time', default: new Date() },
               }
             }
           ]
@@ -120,18 +131,23 @@ new Vue({
     },
     newTeam: {
       name: '',
-      type: '',
+      type: 'A',
     },
     teams: [],
     teamsA: [],
     teamsB: [],
+    newBattle: {
+      name: '',
+      type: 'A',
+      teams: [],
+    },
     battles: []
   },
   mounted: function() {
     this.openConnection();
     this.setDatabaseContafest();    
     this.refreshTeam();
-    this.setDummyData();
+    this.refreshBattle();
   },
   methods: {
     getRandomNumber: function(max) {
@@ -145,58 +161,6 @@ new Vue({
         name: this.database.contafest.setting.name,
         tables: this.database.contafest.setting.tables
       });
-    },    
-    setDummyData: function() {
-      // this.setDummyTeams();
-      // this.multiplyDummyTeams(3);
-
-      this.setDummyBattles();
-      this.multiplyDummyBattles(3);
-    },
-    setDummyBattles: function() {
-      this.battles = [
-        {
-          id: 1,
-          name: 'Gantian',
-          type: 'A',
-          teams: [1, 3],
-          total_scores: this.getRandomNumber(10000),
-          histories: []
-        },
-        {
-          id: 2,
-          name: 'Rebutan',
-          type: 'B',
-          teams: [2, 3],
-          total_scores: this.getRandomNumber(10000),
-          histories: []
-        },
-        {
-          id: 3,
-          name: 'Babak Belur',
-          type: 'A',
-          teams: [3, 4],
-          total_scores: this.getRandomNumber(10000),
-          histories: []
-        },
-        {
-          id: 4,
-          name: 'Taruhan',
-          type: 'B',
-          teams: [2, 4],
-          total_scores: this.getRandomNumber(10000),
-          histories: []
-        },
-      ];
-    },
-    multiplyDummyBattles: function(amount = 1) {
-      var battles = [];
-      for (let i = 1; i <= amount; i++) {
-        for (const team of this.battles) {
-          battles.push(team);
-        }
-      }
-      this.battles = battles;
     },
     refreshTeam: function() {
       this.fetchTeam();
@@ -215,7 +179,7 @@ new Vue({
         );
         this.teams = results;
       } catch (e) {
-        console.log(e);       
+        console.log(e);
       }
     },
     fetchTeamA: async function() {
@@ -274,7 +238,7 @@ new Vue({
           this.showToast({
             title: 'Gagal',
             description: 'Confucius.ID',
-            content: 'Gagal menambahkan tim ' + team.name
+            content: 'Gagal menambahkan tim baru'
           });
         }
       } catch (e) {
@@ -288,17 +252,87 @@ new Vue({
         }        
       }
     },
+    refreshBattle: function() {
+      this.fetchBattle();
+    },
+    fetchBattle: async function() {
+      this.battles = [];
+      try {
+        const results = await new BattleService().filter(
+          null,
+          [
+            { by: 'id', type: 'asc' }
+          ]
+        );
+        this.battles = results;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    resetNewBattle: function() {
+      this.newBattle = {
+        name: '',
+        type: 'A',
+        teams: [],
+      };
+    },
+    resetNewBattleTeams: function() {
+      this.newBattle.teams = [];
+    },
+    fireAddBattle: async function() {
+      if (this.newBattle.teams.length > 0) {
+        try {
+          const results = await new BattleService().store(this.newBattle);        
+          if (results && results.length > 0) {
+            this.refreshBattle();
+            this.resetNewBattle();
+            var curr = this;
+            results.forEach(battle => {
+              curr.showToast({
+                title: 'Sukses',
+                description: 'Confucius.ID',
+                content: 'Berhasil menambahkan pertandingan ' + battle.name
+              });
+            });
+          }
+          else {
+            this.showToast({
+              title: 'Gagal',
+              description: 'Confucius.ID',
+              content: 'Gagal menambahkan pertandingan baru'
+            });
+          }
+        } catch (e) {
+          console.log(e);
+          if (e && e.message) {
+            this.showToast({
+              title: 'Terjadi kesalahan',
+              description: 'Confucius.ID',
+              content: e.message
+            });
+          }        
+        }
+      }
+      else {
+        this.showToast({
+          title: 'Peringatan',
+          description: 'Confucius.ID',
+          content: 'Silahkan pilih dua atau lebih tim untuk bermain'
+        });
+      }
+    },
     showToast: function(data) {
       this.$refs.toast.setData(data).open();
     }
   },
   watch: {
-    // teams: function(newVal, oldVal) {
-    //   console.log(newVal);
-    //   console.log(oldVal);
-    // }
+    newBattleType: function(newVal, oldVal) {
+      this.resetNewBattleTeams();
+    }
   },
   computed: {
-
+    newBattleType: function() {
+      return this.newBattle.type;
+    }
   }
 });

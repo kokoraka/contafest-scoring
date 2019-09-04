@@ -1,19 +1,15 @@
-import { connection } from "./connection.js";
+import { connection } from "../connection.js";
 
 export class TeamService {
 
 	constructor() {		 
-		this.tableName = "teams";
+		this.tableName = "team";
 	}
 
 	store(team) {
-    team = {
-      name: team.name,
-      type: team.type,
-      total_scores: 0,
-      created_at: new Date(),
-      updated_at: new Date(),
-    }
+		if (!team.total_scores) {
+			team.total_scores = 0;
+		}
 		return connection.insert({
 			into: this.tableName,
 			values: [team],
