@@ -8,30 +8,26 @@ export class BattleService {
 	}
 
   async play(battle) {
-		var result = await connection.transaction({
+		return await connection.transaction({
 			tables: ['battle', 'battle_team'],
 			logic: async function(ctx) {
-				start();
-				setResult('battle', {});
+				ctx.start();
+				ctx.setResult('battle', {});
 				const insertedBattle = await ctx.insert({
-					into: this.tableName,
+					into: 'battle',
 					values: [ ctx.data.battle ],
 					return: true
 				});
-				const battle = insertedBattle[0];
-				const battleTeam = ctx.data.teams.map((team) => {
+        const battle = insertedBattle[0];        
+				const battleTeams = ctx.data.teams.map((team) => {
 					return {
 						total_scores: 0,
 						team_id: team,
 						battle_id: battle.id,						
 					};
-				});
-				const insertedBattleTeam = await ctx.insert({
-					into: 'battle_team',
-					values: battleTeam,
-					return: true
-				})
-				setResult('battle', {'battle': battle, 'battle_team': insertedBattleTeam});
+        });
+        const insertedBattleTeam = await new BattleTeamService().batchStore(battleTeams);
+				ctx.setResult('battle', {'battle': battle, 'battle_team': insertedBattleTeam});
 			},
 			data: {
 				battle: {
@@ -41,8 +37,7 @@ export class BattleService {
 				},
 				teams: battle.teams
 			}
-		});
-		return result.battle;
+    });
   }
 
 	store(battle) {

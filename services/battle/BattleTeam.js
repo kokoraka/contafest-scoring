@@ -6,6 +6,14 @@ export class BattleTeamService {
 		this.tableName = "battle_team";
 	}
 
+  batchStore(battleTeams) {
+		return connection.insert({
+			into: this.tableName,
+			values: battleTeams,
+			return: true
+		})
+  }
+
 	store(battleTeam) {
     if (!battleTeam.total_scores) {
 			battleTeam.total_scores = 0;

@@ -293,16 +293,14 @@ new Vue({
       if (this.newBattle.teams.length > 0) {
         try {
           const results = await new BattleService().play(this.newBattle);        
-          if (results && results.length > 0) {
+          if (results &&  results.battle && results.battle.battle &&
+            results.battle.battle_team && results.battle.battle_team.length > 0) {
             this.refreshBattle();
             this.resetNewBattle();
-            var curr = this;
-            results.forEach(battle => {
-              curr.showToast({
-                title: 'Sukses',
-                description: 'Confucius.ID',
-                content: 'Berhasil menambahkan pertandingan ' + battle.name
-              });
+            this.showToast({
+              title: 'Sukses',
+              description: 'Confucius.ID',
+              content: 'Berhasil menambahkan pertandingan ' + results.battle.battle.name
             });
           }
           else {
