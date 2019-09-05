@@ -290,17 +290,16 @@ new Vue({
       this.newBattle.teams = [];
     },
     fireAddBattle: async function() {
-      if (this.newBattle.teams.length > 0) {
+      if (this.newBattle.teams.length >= 2) {
         try {
-          const results = await new BattleService().play(this.newBattle);        
-          if (results &&  results.battle && results.battle.battle &&
-            results.battle.battle_team && results.battle.battle_team.length > 0) {
+          const results = await new BattleService().play(this.newBattle);
+          if (results) {
             this.refreshBattle();
             this.resetNewBattle();
             this.showToast({
               title: 'Sukses',
               description: 'Confucius.ID',
-              content: 'Berhasil menambahkan pertandingan ' + results.battle.battle.name
+              content: 'Berhasil menambahkan pertandingan baru'
             });
           }
           else {
