@@ -1,8 +1,8 @@
 window.$ = window.jQuery;
 
 import { connection } from "./services/connection.js";
-import { TeamService } from "./services/team/team.js";
-import { BattleService } from "./services/battle/battle.js";
+import { TeamService } from "./services/team/Team.js";
+import { BattleService } from "./services/battle/Battle.js";
 
 Vue.component('toast', {
   template: `
@@ -292,7 +292,7 @@ new Vue({
     fireAddBattle: async function() {
       if (this.newBattle.teams.length > 0) {
         try {
-          const results = await new BattleService().store(this.newBattle);        
+          const results = await new BattleService().play(this.newBattle);        
           if (results && results.length > 0) {
             this.refreshBattle();
             this.resetNewBattle();

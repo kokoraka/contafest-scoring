@@ -1,4 +1,5 @@
 import { connection } from "../connection.js";
+import { BattleTeamService } from "./BattleTeam.js";
 
 export class BattleService {
 
@@ -6,7 +7,7 @@ export class BattleService {
 		this.tableName = "battle";
 	}
 
-	async store(battle) {
+  async play(battle) {
 		var result = await connection.transaction({
 			tables: ['battle', 'battle_team'],
 			logic: async function(ctx) {
@@ -42,6 +43,17 @@ export class BattleService {
 			}
 		});
 		return result.battle;
+  }
+
+	store(battle) {
+    if (!battle.total_scores) {
+			battle.total_scores = 0;
+		}
+		return connection.insert({
+			into: this.tableName,
+			values: [battle],
+			return: true
+		})
 	}
 
   all() {
