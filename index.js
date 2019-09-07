@@ -162,17 +162,9 @@ new Vue({
     this.refreshBattle();
   },
   updated: function() {
-    let hash = window.location.hash;
-    if (hash !== null && hash !== '') {
-      if ($('a[href="' + hash + '"]').length > 0) {
-        $('a[href="' + hash + '"]').tab('show');
-      }      
-    }    
+    this.openCurrentActiveTab();
   },
-  methods: {
-    changeHash: function(hash) {
-      window.location.hash = hash;
-    },
+  methods: {    
     getRandomNumber: function(max) {
       return Math.floor(Math.random() * max);
     },
@@ -398,12 +390,28 @@ new Vue({
     },
     showToast: function(data) {
       this.$refs.toast.setData(data).open();
-    }
+    },
+    changeHash: function(hash) {
+      window.location.hash = hash;
+    },
+    openCurrentActiveTab: function() {
+      let hash = window.location.hash;
+      if (hash !== null && hash !== '') {
+        if ($('a[href="' + hash + '"]').length > 0) {
+          $('a[href="' + hash + '"]').tab('show').on('shown.bs.tab', function(e) {
+            window.location.hash = window.location.href.split('#')[0];
+          });          
+        }      
+      }
+    },
   },
   watch: {
     newBattleType: function(newVal, oldVal) {
       this.resetNewBattleTeams();
-    }
+    },
+    // battles: function(newVal, oldVal) {
+    //   this.openCurrentActiveTab();
+    // }
   },
   computed: {
     newBattleType: function() {
