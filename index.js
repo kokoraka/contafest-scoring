@@ -161,7 +161,18 @@ new Vue({
     this.refreshTeam();
     this.refreshBattle();
   },
+  updated: function() {
+    let hash = window.location.hash;
+    if (hash !== null && hash !== '') {
+      if ($('a[href="' + hash + '"]').length > 0) {
+        $('a[href="' + hash + '"]').tab('show');
+      }      
+    }    
+  },
   methods: {
+    changeHash: function(hash) {
+      window.location.hash = hash;
+    },
     getRandomNumber: function(max) {
       return Math.floor(Math.random() * max);
     },
@@ -346,7 +357,7 @@ new Vue({
         });
       }
     },
-    fireAddBattleScore: async function(battleId, battleTeamId, battleScoreElement, teamId, teamName) {
+    fireAddBattleScore: async function(battleId, battleTeamId, battleScoreElement, teamId, teamName) {      
       var scoreElement = document.getElementById(battleScoreElement);
       var score = parseInt(scoreElement.value);
       if (confirm('Tambahkan ' + score + 'pt untuk tim: ' + teamName + '?')) {
@@ -357,10 +368,9 @@ new Vue({
             battle_team_id: battleTeamId,
             score: score
           });
-          console.log('results', results);
           if (results) {
             this.refreshBattle();
-            this.refreshTeam();
+            this.refreshTeam();            
             this.showToast({
               title: 'Sukses',
               description: 'Confucius.ID',
@@ -399,5 +409,5 @@ new Vue({
     newBattleType: function() {
       return this.newBattle.type;
     }
-  }
+  },
 });

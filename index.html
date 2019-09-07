@@ -39,10 +39,12 @@
                   aria-selected="false">
                   Baru
                 </a>
-                <a class="nav-link" v-for="(battle, index) in battles"
-                  v-bind:id="'v-pills-battle-' + battle.id + '-tab'" data-toggle="pill" 
-                  v-bind:href="'#v-pills-battle-' + battle.id" role="tab" 
-                  v-bind:aria-controls="'v-pills-battle-' + battle.id" 
+                <a class="nav-link" data-toggle="pill" role="tab" 
+                  v-for="(battle, index) in battles"
+                  v-bind:id="'v-pills-battle-' + battle.id + '-tab'"
+                  v-bind:href="'#v-pills-battle-' + battle.id"
+                  v-bind:aria-controls="'v-pills-battle-' + battle.id"
+                  @click="changeHash('#v-pills-battle-' + battle.id)"
                   aria-selected="true">
                   #{{ (index+1) }}
                 </a>
@@ -147,9 +149,9 @@
                     </div>
                   </div>
                 </div>
-                <div class="tab-pane fade" v-for="(battle, index) in battles"
-                  v-bind:id="'v-pills-battle-' + battle.id" 
-                  role="tabpanel" v-bind:aria-labelledby="'v-pills-battle-' + battle.id + '-tab'">
+                <div class="tab-pane fade" role="tabpanel" v-for="(battle, index) in battles"
+                  v-bind:id="'v-pills-battle-' + battle.id"
+                  v-bind:aria-labelledby="'v-pills-battle-' + battle.id + '-tab'">
                   <div class="card">
                     <div class="card-body">
                       <h3>
@@ -201,7 +203,7 @@
               <h5 class="text-center">Kategori A</h5>
               <div class="list-group mt-1" v-if="teamsA.length > 0">
                 <div class="list-group-item list-group-item-action text-white mb-1" 
-                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" 
+                  v-bind:class="{ 'bg-success': (index < 3), 'bg-danger': (index >= 3) }" 
                   v-for="(team, index) in teamsA">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
@@ -219,7 +221,7 @@
               <h5 class="text-center">Kategori B</h5>
               <div class="list-group mt-1" v-if="teamsB.length > 0">
                 <div class="list-group-item list-group-item-action text-white mb-1" 
-                  v-bind:class="{ 'bg-success': (index < 7), 'bg-danger': (index >= 7) }" 
+                  v-bind:class="{ 'bg-success': (index < 3), 'bg-danger': (index >= 3) }" 
                   v-for="(team, index) in teamsB">
                   <div class="d-flex w-100 justify-content-between">
                     <span class="font-bold">{{ team.name }}</span>
