@@ -46,7 +46,15 @@ export class BattleTeamService {
 			join: {
 				with: "team",
 				on: "battle_team.team_id=team.id",
-				type: "inner"
+				type: "inner",
+				as: {
+					id: "team_id",
+					name: "team_name",
+					type: "team_type",
+					total_scores: "team_total_scores",
+					created_at: "team_created_at",
+					updated_at: "team_updated_at",
+				}
 			}
 		};
     if (where !== null) {

@@ -13,10 +13,19 @@
   <div id="app">    
     <div class="container-fluid">
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
           <h1 class="text-center">Confucian Talent Festival</h1>
-          <p class="text-center font-italic">Supported by Confucius.ID</p>
+          <p class="text-center font-italic">
+            Supported by 
+            <a href="https://www.confucius.id" target="_blank">
+              <img src="assets/images/logo.png" 
+                alt="Confucius.ID, education for all" 
+                style="width: 150px; height: 30px;">
+            </a>
+          </p>
         </div>
+        <div class="col-lg-3"></div>
       </div>
 
       <div class="row mt-3">
@@ -47,96 +56,94 @@
                     <div class="card-body">
                       <h3>Permainan Baru</h3>
                       <hr>
-                      <form>
-                        <div class="row">
-                          <div class="col-lg-8">
-                            <div class="form-group">
-                              <label for="name">Nama</label>
-                              <input type="text" class="form-control" id="name" 
-                                name="name" aria-describedby="nameHelp" 
-                                placeholder="Nama Pertandingan" v-model="newBattle.name">
-                            </div>
+                      <div class="row">
+                        <div class="col-lg-8">
+                          <div class="form-group">
+                            <label for="name">Nama</label>
+                            <input type="text" class="form-control" id="name" 
+                              name="name" aria-describedby="nameHelp" 
+                              placeholder="Nama Permainan" v-model="newBattle.name">
                           </div>
-                          <div class="col-lg-4">
-                            <div class="form-group">
-                              <label for="type">Kategori</label>
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" 
-                                  name="type" id="newBattleTypeA" value="A" 
-                                  v-model="newBattle.type" checked>
-                                <label class="form-check-label" for="newBattleTypeA">
-                                  Kategori A
-                                </label>
-                              </div>
-                              <div class="form-check">
-                                <input class="form-check-input" type="radio" 
-                                  name="type" id="newBattleTypeB" value="B"
-                                  v-model="newBattle.type">
-                                <label class="form-check-label" for="newBattleTypeB">
-                                  Kategori B
-                                </label>
-                              </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label for="type">Kategori</label>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" 
+                                name="type" id="newBattleTypeA" value="A" 
+                                v-model="newBattle.type" checked>
+                              <label class="form-check-label" for="newBattleTypeA">
+                                Kategori A
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" 
+                                name="type" id="newBattleTypeB" value="B"
+                                v-model="newBattle.type">
+                              <label class="form-check-label" for="newBattleTypeB">
+                                Kategori B
+                              </label>
                             </div>
                           </div>
                         </div>
-                        <div class="row">
-                          <div class="col-lg-12">
-                            <div v-if="teamsA.length > 0 || teamsB.length > 0">
-                              <div class="row">
-                                <div class="col-lg-4 mb-1" v-if="newBattle.type == 'A'"
-                                  v-for="(team, index) in teamsA">
-                                  <div class="card">
-                                    <div class="card-body">
-                                      <h4 class="text-primary">
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" 
-                                            v-bind:value="team.id" v-bind:id="'battle-team-' + index"
-                                            v-model="newBattle.teams">
-                                          <label class="form-check-label" 
-                                            v-bind:for="'battle-team-' + index">
-                                            {{ team.name }}
-                                          </label>
-                                        </div>
-                                      </h4>
-                                      <h1>{{ team.total_scores }}pt</h1>
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-lg-4 mb-1" v-if="newBattle.type == 'B'"
-                                  v-for="(team, index) in teamsB">
-                                  <div class="card">
-                                    <div class="card-body">
-                                      <h4 class="text-primary">
-                                        <div class="form-check">
-                                          <input class="form-check-input" type="checkbox" 
-                                            v-bind:value="team.id" v-bind:id="'battle-team-' + index"
-                                            v-model="newBattle.teams">
-                                          <label class="form-check-label" 
-                                            v-bind:for="'battle-team-' + index">
-                                            {{ team.name }}
-                                          </label>
-                                        </div>
-                                      </h4>
-                                      <h1>{{ team.total_scores }}pt</h1>
-                                    </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-lg-12">
+                          <div v-if="teamsA.length > 0 || teamsB.length > 0">
+                            <div class="row">
+                              <div class="col-lg-4 mb-1" v-if="newBattle.type == 'A'"
+                                v-for="(team, index) in teamsA">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h4 class="text-primary">
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                          v-bind:value="team.id" v-bind:id="'battle-team-' + index"
+                                          v-model="newBattle.teams">
+                                        <label class="form-check-label" 
+                                          v-bind:for="'battle-team-' + index">
+                                          {{ team.name }}
+                                        </label>
+                                      </div>
+                                    </h4>
+                                    <h1>{{ team.total_scores }}pt</h1>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                            <div v-else>
-                              <div class="alert alert-warning" role="alert">
-                                Belum ada tim, silahkan tambahkan tim terlebih dahulu
+                              <div class="col-lg-4 mb-1" v-if="newBattle.type == 'B'"
+                                v-for="(team, index) in teamsB">
+                                <div class="card">
+                                  <div class="card-body">
+                                    <h4 class="text-primary">
+                                      <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" 
+                                          v-bind:value="team.id" v-bind:id="'battle-team-' + index"
+                                          v-model="newBattle.teams">
+                                        <label class="form-check-label" 
+                                          v-bind:for="'battle-team-' + index">
+                                          {{ team.name }}
+                                        </label>
+                                      </div>
+                                    </h4>
+                                    <h1>{{ team.total_scores }}pt</h1>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
+                          <div v-else>
+                            <div class="alert alert-warning" role="alert">
+                              Belum ada tim, silahkan tambahkan tim terlebih dahulu
+                            </div>
+                          </div>
                         </div>
-                        <div class="form-group mt-3">
-                          <button type="button" class="btn btn-primary btn-block" 
-                            @click="fireAddBattle">
-                            Mulai
-                          </button>
-                        </div>
-                      </form>
+                      </div>
+                      <div class="form-group mt-3">
+                        <button type="button" class="btn btn-primary btn-block" 
+                          @click="fireAddBattle">
+                          Mulai
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -145,24 +152,34 @@
                   role="tabpanel" v-bind:aria-labelledby="'v-pills-battle-' + battle.id + '-tab'">
                   <div class="card">
                     <div class="card-body">
-                      <h3>Pertandingan {{ (index+1) }} ({{ battle.name }})</h3>
+                      <h3>
+                        [{{ battle.type }}] Permainan {{ (index+1) }} 
+                        ({{ battle.name }})
+                      </h3>
                       <hr>
                       <div class="row">
-                        <div class="col-lg-4" v-for="(team, index) in battle.teams">
+                        <div class="col-lg-4" v-for="(battleTeam, index2) in battle.teams">
                           <div class="card">
                             <div class="card-body">
-                              <h4 class="text-primary">{{ team.name }}</h4>
-                              <h1>{{ team.total_scores }}</h1>
-                              <form>
-                                <div class="input-group">
-                                  <input type="number" class="form-control"
-                                    aria-describedby="score" placeholder="Skor" 
-                                    value="100" step="100">
-                                  <div class="input-group-append">
-                                    <button type="button" class="btn btn-primary">+</button>
-                                  </div>
+                              <h4 class="text-primary">{{ battleTeam.team_name }}</h4>
+                              <h1>{{ battleTeam.total_scores }}</h1>
+                              <div class="input-group">
+                                <input type="number" class="form-control"
+                                  aria-describedby="score" placeholder="Skor" 
+                                  value="100" step="100" name="score"
+                                  v-bind:id="'battle-' + index + '-team-' + index2">
+                                <div class="input-group-append">
+                                  <button type="button" class="btn btn-primary"
+                                    @click="fireAddBattleScore(
+                                      battle.id, 
+                                      battleTeam.id, 
+                                      'battle-' + index + '-team-' + index2, 
+                                      battleTeam.team_id,
+                                      battleTeam.team_name)">
+                                    +
+                                  </button>
                                 </div>
-                              </form>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -294,6 +311,7 @@
   <script src="services/team/Team.js" type="module"></script>
   <script src="services/battle/Battle.js" type="module"></script>
   <script src="services/battle/BattleTeam.js" type="module"></script>
+  <script src="services/battle/BattleHistory.js" type="module"></script>
   <script src="index.js" type="module"></script>
   <script type="text/javascript">
     // (function() {

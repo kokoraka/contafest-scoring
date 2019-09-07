@@ -4,6 +4,7 @@ import { connection } from "./services/connection.js";
 import { TeamService } from "./services/team/Team.js";
 import { BattleService } from "./services/battle/Battle.js";
 import { BattleTeamService } from "./services/battle/BattleTeam.js";
+import { BattleHistoryService } from "./services/battle/BattleHistory.js";
 
 Vue.component('toast', {
   template: `
@@ -11,10 +12,10 @@ Vue.component('toast', {
     aria-atomic="true" data-autohide="false">
     <div class="toast" role="alert" data-delay="5000"
       style="position: fixed; top: 10px; right: 10px;">
-      <div class="toast-header bg-dark text-white">
+      <div class="toast-header bg-warning text-dark">
         <!-- <img src="" class="rounded mr-2" alt=""> -->
         <strong class="mr-auto">{{ toast.title }}</strong>
-        <small class="text-white">{{ toast.description }}</small>
+        <small class="text-dark">{{ toast.description }}</small>
         <button type="button" class="ml-2 mb-1 close" 
           data-dismiss="toast" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -231,36 +232,47 @@ new Vue({
     },
     fireAddTeam: async function() {
       $('#modalAddTeam').modal('hide');
-      try {
-        const results = await new TeamService().store(this.newTeam);        
-        if (results && results.length > 0) {
-          this.refreshTeam();
-          this.resetNewTeam();
-          var curr = this;
-          results.forEach(team => {
-            curr.showToast({
-              title: 'Sukses',
-              description: 'Confucius.ID',
-              content: 'Berhasil menambahkan tim ' + team.name
+      var nameLength = this.newTeam.name.length;
+      if (nameLength > 0 && nameLength <= 15) {
+        try {
+          const results = await new TeamService().store(this.newTeam);        
+          if (results && results.length > 0) {
+            this.refreshTeam();
+            this.resetNewTeam();
+            var curr = this;
+            results.forEach(team => {
+              curr.showToast({
+                title: 'Sukses',
+                description: 'Confucius.ID',
+                content: 'Berhasil menambahkan tim ' + team.name
+              });
             });
-          });
+          }
+          else {
+            this.showToast({
+              title: 'Gagal',
+              description: 'Confucius.ID',
+              content: 'Gagal menambahkan tim baru'
+            });
+          }
+        } catch (e) {
+          console.log(e);
+          if (e && e.message) {
+            this.showToast({
+              title: 'Terjadi kesalahan',
+              description: 'Confucius.ID',
+              content: e.message
+            });
+          }        
         }
-        else {
-          this.showToast({
-            title: 'Gagal',
-            description: 'Confucius.ID',
-            content: 'Gagal menambahkan tim baru'
-          });
-        }
-      } catch (e) {
-        console.log(e);
-        if (e && e.message) {
-          this.showToast({
-            title: 'Terjadi kesalahan',
-            description: 'Confucius.ID',
-            content: e.message
-          });
-        }        
+      }
+      else {
+        this.resetNewTeam();
+        this.showToast({
+          title: 'Peringatan',
+          description: 'Confucius.ID',
+          content: 'Nama Tim tidak boleh lebih dari 15 karakter'
+        });
       }
     },
     refreshBattle: function() {
@@ -332,6 +344,46 @@ new Vue({
           description: 'Confucius.ID',
           content: 'Silahkan pilih dua atau lebih tim untuk bermain'
         });
+      }
+    },
+    fireAddBattleScore: async function(battleId, battleTeamId, battleScoreElement, teamId, teamName) {
+      var scoreElement = document.getElementById(battleScoreElement);
+      var score = parseInt(scoreElement.value);
+      if (confirm('Tambahkan ' + score + 'pt untuk tim: ' + teamName + '?')) {
+        try {
+          const results = await new BattleHistoryService().play({
+            team_id: teamId,
+            battle_id: battleId,
+            battle_team_id: battleTeamId,
+            score: score
+          });
+          console.log('results', results);
+          if (results) {
+            this.refreshBattle();
+            this.refreshTeam();
+            this.showToast({
+              title: 'Sukses',
+              description: 'Confucius.ID',
+              content: 'Berhasil menambahkan skor'
+            });
+          }
+          else {
+            this.showToast({
+              title: 'Gagal',
+              description: 'Confucius.ID',
+              content: 'Gagal menambahkan skor'
+            });
+          }
+        } catch (e) {
+          console.log(e);
+          if (e && e.message) {
+            this.showToast({
+              title: 'Terjadi kesalahan',
+              description: 'Confucius.ID',
+              content: e.message
+            });
+          }        
+        }
       }
     },
     showToast: function(data) {
