@@ -1,5 +1,4 @@
 import { connection } from "../connection.js";
-import { BattleTeamService } from "./BattleTeam.js";
 
 export class BattleService {
 
@@ -25,8 +24,12 @@ export class BattleService {
 						team_id: team,
 						battle_id: battle.id,						
 					};
-        });
-        const insertedBattleTeam = await new BattleTeamService().batchStore(battleTeams);
+				});
+        const insertedBattleTeam = await ctx.insert({
+					into: 'battle_team',
+					values: battleTeams,
+					return: true
+				});
 				ctx.setResult('battle', {'battle': battle, 'battle_team': insertedBattleTeam});
 			},
 			data: {

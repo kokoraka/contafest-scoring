@@ -40,8 +40,15 @@ export class BattleTeamService {
 		})
 	}
 
-  filter(where = null, order = null) {
-    var data = { from: this.tableName };
+  filter(where = null, order = null) {		
+    var data = { 
+			from: this.tableName,
+			join: {
+				with: "team",
+				on: "battle_team.team_id=team.id",
+				type: "inner"
+			}
+		};
     if (where !== null) {
       data.where = where;
     }

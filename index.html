@@ -151,8 +151,8 @@
                         <div class="col-lg-4" v-for="(team, index) in battle.teams">
                           <div class="card">
                             <div class="card-body">
-                              <h4 class="text-primary">AAAA</h4>
-                              <h1>XXXX</h1>
+                              <h4 class="text-primary">{{ team.name }}</h4>
+                              <h1>{{ team.total_scores }}</h1>
                               <form>
                                 <div class="input-group">
                                   <input type="number" class="form-control"
@@ -294,7 +294,6 @@
   <script src="services/team/Team.js" type="module"></script>
   <script src="services/battle/Battle.js" type="module"></script>
   <script src="services/battle/BattleTeam.js" type="module"></script>
-  <script src="services/battle/BattleHistory.js" type="module"></script>
   <script src="index.js" type="module"></script>
   <script type="text/javascript">
     // (function() {

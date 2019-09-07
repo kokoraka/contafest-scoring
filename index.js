@@ -3,6 +3,7 @@ window.$ = window.jQuery;
 import { connection } from "./services/connection.js";
 import { TeamService } from "./services/team/Team.js";
 import { BattleService } from "./services/battle/Battle.js";
+import { BattleTeamService } from "./services/battle/BattleTeam.js";
 
 Vue.component('toast', {
   template: `
@@ -274,7 +275,13 @@ new Vue({
             { by: 'id', type: 'asc' }
           ]
         );
+        for (var i = 0; i < results.length; i++) {
+          results[i].teams = await new BattleTeamService().filter(
+            { battle_id: results[i].id }
+          );
+        }
         this.battles = results;
+        console.log('results', results);
       } catch (e) {
         console.log(e);
       }
