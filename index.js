@@ -281,7 +281,6 @@ new Vue({
           );
         }
         this.battles = results;
-        console.log('results', results);
       } catch (e) {
         console.log(e);
       }
