@@ -399,8 +399,8 @@ new Vue({
       if (hash !== null && hash !== '') {
         if ($('a[href="' + hash + '"]').length > 0) {
           $('a[href="' + hash + '"]').tab('show').on('shown.bs.tab', function(e) {
-            window.location.hash = window.location.href.split('#')[0];
-          });          
+            window.location.href.split('#')[0];
+          });
         }      
       }
     },
