@@ -37,4 +37,16 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   console.log('Fetching:', event.request.url);
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    }).catch(function(err) {
+      return caches.open(cache_static).then(function(cache) {
+        // return cache.match('/error');
+      });
+    })
+  );
 });
