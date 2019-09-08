@@ -1,7 +1,7 @@
 var cache_version = 'v1';
 var cache_static = 's-confucius.id-' + cache_version;
 var cache_request = [
-  '/',
+  './',
   './index.html',
   './index.js',
   './index.css',  
@@ -35,6 +35,7 @@ self.addEventListener('install', event => {
 
 self.addEventListener('activate', event => {
   console.log('Service worker activating...');
+  return self.clients.claim();
 });
 
 self.addEventListener('fetch', event => {
