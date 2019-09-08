@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">  
   <link rel="stylesheet" href="index.css">
   <link rel="icon" type="image/x-icon" href="assets/images/favicon.png">
+  <link rel="manifest" href="manifest.json">
   <title>Confucian Talent Festival - Scoring Board</title>
 </head>
 <body>
@@ -165,7 +166,7 @@
                           <div class="card">
                             <div class="card-body">
                               <h4 class="text-primary">{{ battleTeam.team_name }}</h4>
-                              <h1>{{ battleTeam.total_scores }}</h1>
+                              <h1>{{ battleTeam.total_scores }}pt</h1>
                               <div class="input-group">
                                 <input type="number" class="form-control"
                                   aria-describedby="score" placeholder="Skor" 
@@ -315,27 +316,26 @@
   <script src="services/battle/BattleTeam.js" type="module"></script>
   <script src="services/battle/BattleHistory.js" type="module"></script>
   <script src="index.js" type="module"></script>
-  <script src="worker.js"></script>
   <script type="text/javascript">
-    // (function() {
-    //   'use strict';      
-    //   if ('serviceWorker' in navigator) {
-    //     window.addEventListener('load', () => {
-    //       navigator.serviceWorker.register('worker.js')
-    //       .then(registration => {
-    //         console.log('Service Worker is registered', registration);
-    //       })
-    //       .catch(err => {
-    //         console.error('Registration failed:', err);
-    //       });
-    //     });
-    //   }
-    //   if (!('indexedDB' in window)) {
-    //     alert('Aplikasi tidak didukung browser, gunakan browser lain');
-    //     console.log('This browser doesn\'t support IndexedDB');
-    //     // return;
-    //   }
-    // })();
+    (function() {
+      'use strict';      
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('worker.js')
+          .then(registration => {
+            console.log('Service Worker is registered', registration);
+          })
+          .catch(err => {
+            console.error('Registration failed:', err);
+          });
+        });
+      }
+      if (!('indexedDB' in window)) {
+        alert('Aplikasi tidak didukung browser, gunakan browser lain');
+        console.log('This browser doesn\'t support IndexedDB');
+        // return;
+      }
+    })();
   </script>
 </body>
 </html>

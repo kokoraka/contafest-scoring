@@ -8,7 +8,7 @@
   "background_color": "#363434",
   "display": "standalone",
   "orientation": "portrait",
-  "start_url": "/?utm_source=native",
+  "start_url": "/",
   "gcm_sender_id": "345716881094",
   "gcm_user_visible_only": true,
   "permissions": [

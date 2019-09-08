@@ -164,7 +164,7 @@ new Vue({
   updated: function() {
     this.openCurrentActiveTab();
   },
-  methods: {    
+  methods: {
     getRandomNumber: function(max) {
       return Math.floor(Math.random() * max);
     },
