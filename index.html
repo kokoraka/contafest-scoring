@@ -315,10 +315,16 @@
   <script src="services/battle/Battle.js" type="module"></script>
   <script src="services/battle/BattleTeam.js" type="module"></script>
   <script src="services/battle/BattleHistory.js" type="module"></script>
+  <script src="polyfill.js"></script>
+  <script src="fetch.js"></script>
+  <script src="promise.js"></script>
   <script src="index.js" type="module"></script>
   <script type="text/javascript">
     (function() {
-      'use strict';      
+      'use strict';
+      if (!window.Promise) {
+        window.Promise = Promise;
+      }
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('worker.js')

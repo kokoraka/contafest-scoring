@@ -1,11 +1,14 @@
 var cache_version = 'v1';
-var cache_static = 's-confucius.id-' + cache_version;
+var cache_static = 's-contafest-' + cache_version;
 var cache_request = [
   './',
   './index.html',
   './index.js',
-  './index.css',  
-  // 'polyfill.js',
+  './index.css',
+  './polyfill.js',
+  './fetch.js',
+  './promise.js',
+  './manifest.json',
   './assets/jquery/jquery.min.js',
   './assets/vuejs/vue.js',
   './assets/bootstrap/js/bootstrap.min.js',
