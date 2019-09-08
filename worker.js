@@ -4,7 +4,8 @@ var cache_request = [
   'index.html',
   'index.js',
   'index.css',  
-  'polyfill.js',
+  // 'polyfill.js',
+  '/',
   '/assets/jquery/jquery.min.js',
   '/assets/vuejs/vue.js',
   '/assets/bootstrap/js/bootstrap.min.js',
@@ -39,6 +40,7 @@ self.addEventListener('fetch', event => {
   console.log('Fetching:', event.request.url);
   event.respondWith(
     caches.match(event.request).then(function(response) {
+      console.log('response', response);
       if (response) {
         return response;
       }
