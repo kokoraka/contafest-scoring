@@ -25,6 +25,7 @@ self.addEventListener('install', event => {
   console.log('Service worker installing...');
   event.waitUntil(
     caches.open(cache_static).then(function(cache) {
+      console.log('cache', cache);
       return cache.addAll(cache_request);
     }).catch(function(error) {
       console.log(error);
